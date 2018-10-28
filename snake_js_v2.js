@@ -1,14 +1,13 @@
-//常数存起来
-//不要去写死
 window.onload = function () {
     var canvas = document.getElementById('playground');
     var scoreEle = document.getElementById('score');
     var ctx = canvas.getContext('2d');
-    const BLOCK_SIZE = 10; // 常量只能初始化时候赋值
+
+    const BLOCK_SIZE = 10;
     const HALF_BLOCK_SIZE = BLOCK_SIZE / 2;
-    const howmany_beans = 7;
-    var CANVAS_WIDTH = canvas.width;
-    var CANVAS_HEIGHT = canvas.height;
+    const HOWMANY_BEANS = 7;
+    const CANVAS_WIDTH = canvas.width;
+    const CANVAS_HEIGHT = canvas.height;
     //
     var horizontal_speed = 0;
     var vertical_speed = -BLOCK_SIZE;
@@ -42,29 +41,30 @@ window.onload = function () {
     function rand(a, b) {
         return Math.floor(Math.random() * (b - a) / BLOCK_SIZE) * BLOCK_SIZE + a;
     }
-
+    
+    function generatePosition() {
+        var x = rand(0, CANVAS_WIDTH);
+        var y = rand(0, CANVAS_HEIGHT);
+        return{x: x, y: y};
+    }
+    
     function drawBean() {
         ctx.fillStyle = 'rgb(0,0,0)';
-        beans = [];
-        for (var i = 0; i < howmany_beans; i++) {
-            var x = rand(0, CANVAS_WIDTH);
-            var y = rand(0, CANVAS_HEIGHT);
+        for (var i = 0; i < HOWMANY_BEANS; i++) {
+            beans[i] = generatePosition();
             for (var n = 0; n < snake.length; n++) {
-                if (x == snake[n] && y == snake[n]) {
-                    x = rand(0, CANVAS_WIDTH);
-                    y = rand(0, CANVAS_HEIGHT);
+                if (beans[i].x == snake[n].x && beans[i].y == snake[n].y) {//x == snake[n]
+                    beans[i] = generatePosition();
                     n -= 1;
                 }
             }
-            for (var n = 0; n < beans.length; n++) {
-                if (x == beans[n] && y == beans[n]) {
-                    x = rand(0, CANVAS_WIDTH);
-                    y = rand(0, CANVAS_HEIGHT);
-                    n -= 1;
+            for (var j = 0; j < i; j++) {
+                if (beans[i].x == beans[j].x && beans[i].y == beans[j].y) {
+                    beans[i] = generatePosition();
+                    j -= 1;
                 }
             }
-            ctx.fillRect(x - HALF_BLOCK_SIZE, y - HALF_BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE);
-            beans.push({x: x, y: y});
+            ctx.fillRect(beans[i].x - HALF_BLOCK_SIZE, beans[i].y - HALF_BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE);
         }
     }
 
@@ -118,12 +118,12 @@ window.onload = function () {
         //
         resetScore();
     }
-
     reset();
+
     function clone(obj) {
         return Object.assign({}, obj);
     }
-
+    
     function snake_move() {
         setTimeout(snake_move, 1000 / 5);
         for (var i = snake.length - 1; i > 0; i--) {
@@ -151,26 +151,20 @@ window.onload = function () {
         for (var i = 0; i < beans.length; ++i) {
             if (beans[i].x == snake[0].x && beans[i].y == snake[0].y) {
                 addScore();
-                beans[i].x = rand(0, CANVAS_WIDTH);
-                beans[i].y = rand(0, CANVAS_HEIGHT);//检测位置
+                beans[i] = generatePosition();
                 for (var n = 0; n < snake.length; n++) {
                     if (beans[i].x == snake[n] && beans[i].y == snake[n]) {
-                        beans[i].x = rand(0, CANVAS_WIDTH);
-                        beans[i].y = rand(0, CANVAS_HEIGHT);
+                        beans[i] = generatePosition();
                         n -= 1;
                     }
                 }
                 for (var n = 0; n < beans.length; n++) {
                     if (beans[i].x == beans[n] && beans[i].y == beans[n]) {
-                        beans[i].x = rand(0, CANVAS_WIDTH);
-                        beans[i].y = rand(0, CANVAS_HEIGHT);
+                        beans[i] = generatePosition();
                         n -= 1;
                     }
                 }
-                ctx.fillRect(beans[i].x - HALF_BLOCK_SIZE,
-                        beans[i].y - HALF_BLOCK_SIZE,
-                        BLOCK_SIZE,
-                        BLOCK_SIZE);
+                ctx.fillRect(beans[i].x - HALF_BLOCK_SIZE, beans[i].y - HALF_BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE);
                 dec = 1;
                 break;
             }
@@ -189,6 +183,5 @@ window.onload = function () {
 
         drawSnake();
     }
-
     snake_move();
 }
