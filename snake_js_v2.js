@@ -4,7 +4,6 @@ window.onload = function () {
     var ctx = canvas.getContext('2d');
 
     const BLOCK_SIZE = 10;
-    const HALF_BLOCK_SIZE = BLOCK_SIZE / 2;
     const HOWMANY_BEANS = 7;
     const CANVAS_WIDTH = canvas.width;
     const CANVAS_HEIGHT = canvas.height;
@@ -29,13 +28,13 @@ window.onload = function () {
     function drawSnake() {
         ctx.fillStyle = 'rgb(255,200,0)';
         for (var i = 0; i < snake.length; ++i) {
-            ctx.fillRect(snake[i].x - HALF_BLOCK_SIZE, snake[i].y - HALF_BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE);
+            ctx.fillRect(snake[i].x, snake[i].y, BLOCK_SIZE, BLOCK_SIZE);
         }
     }
 
     function clearSnake() {
         var i = snake.length - 1;
-        ctx.clearRect(snake[i].x - HALF_BLOCK_SIZE, snake[i].y - HALF_BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE);
+        ctx.clearRect(snake[i].x, snake[i].y , BLOCK_SIZE, BLOCK_SIZE);
     }
 
     function rand(a, b) {
@@ -64,7 +63,7 @@ window.onload = function () {
                     j -= 1;
                 }
             }
-            ctx.fillRect(beans[i].x - HALF_BLOCK_SIZE, beans[i].y - HALF_BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE);
+            ctx.fillRect(beans[i].x, beans[i].y, BLOCK_SIZE, BLOCK_SIZE);
         }
     }
 
@@ -143,7 +142,6 @@ window.onload = function () {
             snake[0].y += CANVAS_HEIGHT;
         } else if (snake[0].y >= CANVAS_HEIGHT) {
             snake[0].y -= CANVAS_HEIGHT;
-
         }
 
         var dec = 0;
@@ -164,7 +162,7 @@ window.onload = function () {
                         n -= 1;
                     }
                 }
-                ctx.fillRect(beans[i].x - HALF_BLOCK_SIZE, beans[i].y - HALF_BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE);
+                ctx.fillRect(beans[i].x, beans[i].y, BLOCK_SIZE, BLOCK_SIZE);
                 dec = 1;
                 break;
             }
